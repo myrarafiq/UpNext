@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Map, FolderGit2, Trophy, Users, Bell, LogOut, Menu, X, FileText, Calendar, UserCircle, Clock } from 'lucide-react';
+import { LayoutDashboard, Map, FolderGit2, Trophy, Users, Bell, LogOut, Menu, X, FileText, Calendar, UserCircle, Clock, BarChart3, Timeline as TimelineIcon } from 'lucide-react';
 import Overview from './dashboard/Overview';
 import Roadmap from './dashboard/Roadmap';
 import Projects from './dashboard/Projects';
@@ -10,23 +10,31 @@ import CVGenerator from './dashboard/CVGenerator';
 import Timeline from './dashboard/Timeline';
 import SmartScheduler from './dashboard/SmartScheduler';
 import MentorHub from './dashboard/MentorHub';
+import Analytics from './dashboard/Analytics';
+import EnhancedTimeline from './dashboard/EnhancedTimeline';
+import CVPreview from './dashboard/CVPreview';
 import { useApp } from '../context/AppContext';
+import { aishaProfile } from '../data/aishaJourney';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [demoMode] = useState(true); // Aisha's demo
   const { userData, reminders } = useApp();
+  
+  // Use Aisha's profile in demo mode
+  const currentUser = demoMode ? aishaProfile : userData;
 
   const navigation = [
     { id: 'overview', name: 'Overview', icon: LayoutDashboard },
+    { id: 'analytics', name: 'Analytics', icon: BarChart3, badge: 'new' },
     { id: 'roadmap', name: 'My Roadmap', icon: Map },
-    { id: 'timeline', name: 'Timeline', icon: Calendar },
+    { id: 'enhanced-timeline', name: 'Journey Timeline', icon: TimelineIcon, badge: 'new' },
     { id: 'projects', name: 'Projects', icon: FolderGit2 },
-    { id: 'cv', name: 'CV Generator', icon: FileText },
+    { id: 'cv-preview', name: 'Job-Ready CV', icon: FileText, badge: 'new' },
     { id: 'scheduler', name: 'Scheduler', icon: Clock },
     { id: 'mentor', name: 'Mentor Hub', icon: UserCircle },
     { id: 'portfolio', name: 'Portfolio', icon: Trophy },
-    { id: 'community', name: 'Community', icon: Users },
   ];
 
   const handleReset = () => {
@@ -40,14 +48,20 @@ const Dashboard = () => {
     switch (activeTab) {
       case 'overview':
         return <Overview />;
+      case 'analytics':
+        return <Analytics />;
       case 'roadmap':
         return <Roadmap />;
+      case 'enhanced-timeline':
+        return <EnhancedTimeline />;
       case 'timeline':
         return <Timeline />;
       case 'projects':
         return <Projects />;
       case 'cv':
         return <CVGenerator />;
+      case 'cv-preview':
+        return <CVPreview />;
       case 'scheduler':
         return <SmartScheduler />;
       case 'mentor':
