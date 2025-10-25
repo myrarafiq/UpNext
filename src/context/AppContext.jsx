@@ -39,21 +39,34 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const savedData = localStorage.getItem('upnext_data');
     if (savedData) {
-      const parsed = JSON.parse(savedData);
-      setUserData(parsed.userData || userData);
-      setRoadmap(parsed.roadmap || []);
-      setCompletedTasks(parsed.completedTasks || []);
-      setProjects(parsed.projects || []);
-      setReminders(parsed.reminders || []);
-      setJobReadinessScore(parsed.jobReadinessScore || 0);
-      // Load new features
-      setCvData(parsed.cvData || null);
-      setLinkedInData(parsed.linkedInData || null);
-      setGithubData(parsed.githubData || null);
-      setCertificates(parsed.certificates || []);
-      setSchedulePreferences(parsed.schedulePreferences || null);
-      setNotifications(parsed.notifications || []);
-      setMentorSessions(parsed.mentorSessions || []);
+      try {
+        const parsed = JSON.parse(savedData);
+        // Ensure userData has all required fields
+        const loadedUserData = parsed.userData || {};
+        setUserData({
+          name: loadedUserData.name || '',
+          targetJob: loadedUserData.targetJob || '',
+          currentLevel: loadedUserData.currentLevel || '',
+          skills: loadedUserData.skills || []
+        });
+        setRoadmap(parsed.roadmap || []);
+        setCompletedTasks(parsed.completedTasks || []);
+        setProjects(parsed.projects || []);
+        setReminders(parsed.reminders || []);
+        setJobReadinessScore(parsed.jobReadinessScore || 0);
+        // Load new features
+        setCvData(parsed.cvData || null);
+        setLinkedInData(parsed.linkedInData || null);
+        setGithubData(parsed.githubData || null);
+        setCertificates(parsed.certificates || []);
+        setSchedulePreferences(parsed.schedulePreferences || null);
+        setNotifications(parsed.notifications || []);
+        setMentorSessions(parsed.mentorSessions || []);
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+        // Clear corrupted data
+        localStorage.removeItem('upnext_data');
+      }
     }
   }, []);
 

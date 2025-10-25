@@ -46,9 +46,9 @@ const Overview = () => {
       <div className="card bg-gradient-to-r from-primary-600 to-purple-600 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold mb-2">Welcome back, {userData.name}! 👋</h2>
+            <h2 className="text-3xl font-bold mb-2">Welcome back, {userData.name || 'there'}! 👋</h2>
             <p className="text-primary-100 text-lg">
-              You're on track to become a {userData.targetJob}
+              You're on track to become a {userData.targetJob || 'professional developer'}
             </p>
           </div>
           <div className="hidden md:block">
