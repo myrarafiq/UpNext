@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Map, FolderGit2, Trophy, Users, Bell, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Map, FolderGit2, Trophy, Users, Bell, LogOut, Menu, X, FileText, Calendar, UserCircle, Clock } from 'lucide-react';
 import Overview from './dashboard/Overview';
 import Roadmap from './dashboard/Roadmap';
 import Projects from './dashboard/Projects';
 import Portfolio from './dashboard/Portfolio';
 import Community from './dashboard/Community';
 import Reminders from './dashboard/Reminders';
+import CVGenerator from './dashboard/CVGenerator';
+import Timeline from './dashboard/Timeline';
+import SmartScheduler from './dashboard/SmartScheduler';
+import MentorHub from './dashboard/MentorHub';
 import { useApp } from '../context/AppContext';
 
 const Dashboard = () => {
@@ -16,7 +20,11 @@ const Dashboard = () => {
   const navigation = [
     { id: 'overview', name: 'Overview', icon: LayoutDashboard },
     { id: 'roadmap', name: 'My Roadmap', icon: Map },
+    { id: 'timeline', name: 'Timeline', icon: Calendar },
     { id: 'projects', name: 'Projects', icon: FolderGit2 },
+    { id: 'cv', name: 'CV Generator', icon: FileText },
+    { id: 'scheduler', name: 'Scheduler', icon: Clock },
+    { id: 'mentor', name: 'Mentor Hub', icon: UserCircle },
     { id: 'portfolio', name: 'Portfolio', icon: Trophy },
     { id: 'community', name: 'Community', icon: Users },
   ];
@@ -34,8 +42,16 @@ const Dashboard = () => {
         return <Overview />;
       case 'roadmap':
         return <Roadmap />;
+      case 'timeline':
+        return <Timeline />;
       case 'projects':
         return <Projects />;
+      case 'cv':
+        return <CVGenerator />;
+      case 'scheduler':
+        return <SmartScheduler />;
+      case 'mentor':
+        return <MentorHub />;
       case 'portfolio':
         return <Portfolio />;
       case 'community':
@@ -129,7 +145,11 @@ const Dashboard = () => {
             <p className="text-sm text-gray-500 mt-1">
               {activeTab === 'overview' && 'Track your progress and see what\'s next'}
               {activeTab === 'roadmap' && 'Your personalized learning journey'}
+              {activeTab === 'timeline' && 'Visualize your complete learning path'}
               {activeTab === 'projects' && 'Build real-world projects'}
+              {activeTab === 'cv' && 'Generate an ATS-optimized resume'}
+              {activeTab === 'scheduler' && 'Manage your learning schedule'}
+              {activeTab === 'mentor' && 'Connect with industry experts'}
               {activeTab === 'portfolio' && 'Showcase your achievements'}
               {activeTab === 'community' && 'Connect with other learners'}
             </p>

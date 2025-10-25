@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { generateRoadmap, adaptRoadmap } from '../utils/aiEngine';
+import { agenticAI } from '../utils/agenticAI';
 
 const AppContext = createContext();
 
@@ -24,6 +25,15 @@ export const AppProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [jobReadinessScore, setJobReadinessScore] = useState(0);
+  
+  // New state for enhanced features
+  const [cvData, setCvData] = useState(null);
+  const [linkedInData, setLinkedInData] = useState(null);
+  const [githubData, setGithubData] = useState(null);
+  const [certificates, setCertificates] = useState([]);
+  const [schedulePreferences, setSchedulePreferences] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [mentorSessions, setMentorSessions] = useState([]);
 
   // Load data from localStorage
   useEffect(() => {
@@ -36,6 +46,14 @@ export const AppProvider = ({ children }) => {
       setProjects(parsed.projects || []);
       setReminders(parsed.reminders || []);
       setJobReadinessScore(parsed.jobReadinessScore || 0);
+      // Load new features
+      setCvData(parsed.cvData || null);
+      setLinkedInData(parsed.linkedInData || null);
+      setGithubData(parsed.githubData || null);
+      setCertificates(parsed.certificates || []);
+      setSchedulePreferences(parsed.schedulePreferences || null);
+      setNotifications(parsed.notifications || []);
+      setMentorSessions(parsed.mentorSessions || []);
     }
   }, []);
 
@@ -47,16 +65,27 @@ export const AppProvider = ({ children }) => {
       completedTasks,
       projects,
       reminders,
-      jobReadinessScore
+      jobReadinessScore,
+      cvData,
+      linkedInData,
+      githubData,
+      certificates,
+      schedulePreferences,
+      notifications,
+      mentorSessions
     };
     localStorage.setItem('upnext_data', JSON.stringify(dataToSave));
-  }, [userData, roadmap, completedTasks, projects, reminders, jobReadinessScore]);
+  }, [userData, roadmap, completedTasks, projects, reminders, jobReadinessScore, 
+      cvData, linkedInData, githubData, certificates, schedulePreferences, notifications, mentorSessions]);
 
   const initializeUserData = (data) => {
     setUserData(data);
     const initialRoadmap = generateRoadmap(data.targetJob, data.currentLevel);
     setRoadmap(initialRoadmap);
     calculateJobReadiness([], initialRoadmap);
+    
+    // Initialize agentic AI
+    agenticAI.initialize(data, initialRoadmap, [], [], []);
   };
 
   const completeTask = (taskId, understanding) => {
@@ -120,6 +149,38 @@ export const AppProvider = ({ children }) => {
     ));
   };
 
+  // New functions for enhanced features
+  const updateCVData = (newCVData) => {
+    setCvData(newCVData);
+  };
+
+  const uploadCertificate = (certificate) => {
+    setCertificates([...certificates, certificate]);
+    // Add notification
+    addNotification({
+      title: 'Certificate Uploaded',
+      message: `${certificate.name} has been added to your timeline`,
+      timestamp: new Date().toLocaleString()
+    });
+  };
+
+  const updateSchedulePreferences = (prefs) => {
+    setSchedulePreferences(prefs);
+  };
+
+  const addNotification = (notification) => {
+    setNotifications([notification, ...notifications].slice(0, 20)); // Keep last 20
+  };
+
+  const bookMentorSession = (session) => {
+    setMentorSessions([...mentorSessions, session]);
+    addNotification({
+      title: 'Mentor Session Booked',
+      message: `Session with ${session.mentor.name} scheduled`,
+      timestamp: new Date().toLocaleString()
+    });
+  };
+
   const value = {
     userData,
     roadmap,
@@ -127,11 +188,23 @@ export const AppProvider = ({ children }) => {
     projects,
     reminders,
     jobReadinessScore,
+    cvData,
+    linkedInData,
+    githubData,
+    certificates,
+    schedulePreferences,
+    notifications,
+    mentorSessions,
     initializeUserData,
     completeTask,
     generateProject,
     dismissReminder,
-    updateTaskStatus
+    updateTaskStatus,
+    updateCVData,
+    uploadCertificate,
+    updateSchedulePreferences,
+    addNotification,
+    bookMentorSession
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
