@@ -239,9 +239,9 @@ For production deployment:
 ```env
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/upnext
-OPENAI_API_KEY=sk-...
-JWT_SECRET=very_strong_random_secret
+MONGODB_URI=mongodb+srv://<username>:<password>@<your-cluster>.mongodb.net/upnext
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxx
+JWT_SECRET=<generate-a-secure-random-string-here>
 FRONTEND_URL=https://yourdomain.com
 ```
 
